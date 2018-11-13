@@ -1,0 +1,21 @@
+FLAT FILE VERSION=3.0
+DATE FILES CREATED=2018-09-02 06:09:04
+RECORD LENGTH, BYTES= 24
+NUMBER OF DATA COLUMNS=  4
+NUMBER OF ROWS= 43200
+FLAG FOR MISSING DATA= -1.00E+32
+TIME RESOLUTION, SEC= 60.0000
+ENDIAN=LITTLE
+------------------------------------------------------------------------------
+NNN <name>     <units>    <description>                   <type><offset>
+000 <Time>     <Days>     <Modify Julian Day=JD-2400000.5>  <T> <0000>
+001 <ALK_H>     <nT>      <Alexandrovka geomagnetic observatory, MSU, IZMIRAN><R> <0008>
+002 <ALK_E>     <nT>      <Alexandrovka geomagnetic observatory, MSU, IZMIRAN><R> <0012>
+003 <ALK_Z>     <nT>      <Alexandrovka geomagnetic observatory, MSU, IZMIRAN><R> <0016>
+004 <ALK_t>     <dC>      <Alexandrovka geomagnetic observatory, MSU, IZMIRAN><R> <0020>
+
+NOTES:
+Start time=2018-09-01 00:00:30.00
+End   time=2018-09-30 23:59:30.00
+ALK observatory preliminary 1 min data
+END
