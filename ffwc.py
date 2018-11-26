@@ -257,7 +257,7 @@ if len(fin)>1:
     COD=fin[:4]
     if fin[-3:-1]=='ff':    # FF file
         FT='F'
-        ok=openrff(0, fin,False)
+        ok=openrff(0, fin, False)
         if ok<0:
             fin=wx.FileSelector('Âûבונטעו פאיכ','','*.ffh','')
             ok=openrff(0, fin,True)
