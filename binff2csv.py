@@ -8,6 +8,8 @@ import numpy
 from tkinter import Tk
 from tkinter.filedialog import askopenfilenames
 import pandas as pd
+import julian
+
 
 Tk().withdraw()  # we don't want a full GUI, so keep the root window from appearing
 
@@ -20,14 +22,16 @@ openlist = [each[:-3] for each in askopenfilenames(
 
 
 # here's the main part of file:
-def binff2csv(filename):  # converting function
-    # try to open files
+def binff2csv(filename, jtc=False):  # converting function
+    # filename = 'C:/***/*...*/**.' with dot in the end
+    # 'jtc' means 'julian time code'
+
+    # 1. first we should get info from header files
     try:
         ffh = open(filename + 'ffh', 'r')
     except:  # todo посмотреть в викиверсити экзит коды
         print('selected files are not suitable')
         raise SystemExit
-
     # reading first part of header file
     recsize = 0  # number of bytes in a single measure count
     Nrows = 0  # number of measurements
@@ -35,49 +39,62 @@ def binff2csv(filename):  # converting function
     Missvs = 0  # value flagging missing data
     for strin in ffh:  # reading
         value = strin.split('=')[-1]  # variable takes parameters while passing cycle
-        if strin.find('----') >= 0:
+        if '----' in strin:
             break
-        elif strin.find('RECORD') >= 0:
+        elif 'RECORD' in strin:
             recsize = int(value)
-        elif strin.find('COLUMNS') >= 0:
+        elif 'COLUMNS' in strin:
             Ncols = int(value)
-        elif strin.find('ROWS') >= 0:
+        elif 'ROWS' in strin:
             Nrows = int(value)
-        elif strin.find('MISSING') >= 0:
+        elif 'MISSING' in strin:
             Missvs = float(value)  # todo check out header file for other parameters
     ffh.readline()
+    # then we read the rest of the header file
     colheaders = []  # headers of our csv-table
     for strin in ffh:
         if strin.find('<') >= 0:
             colheaders.append(strin.split('<')[1].split('>')[0])
         else:
             break
-    ffh.close()
+    ffh.close()  # end of header reading
 
     print('file length is: %d counts' % Nrows)
     print('number of colheaders: %d' % (Ncols + 1))
     print('estimated file size: %d' % (recsize * Nrows))
 
-    # open binary file
-    ffd = open(filename + 'ffd', 'rb')
-    dt = numpy.dtype([('time', 'f8'), ('data', repr(Ncols) + 'f4')])  # format of first array
+    # 2. then we open binary file
+    try:
+        ffd = open(filename + 'ffd', 'r')
+    except:  # todo посмотреть в викиверсити экзит коды
+        print('something wrong with *.ffd files')
+        raise SystemExit
+    dt = numpy.dtype([('time', 'f8'), ('data', repr(Ncols) + 'f4')])  # template for reading binary file
     n1 = 0  # first count
     n2 = Nrows  # last count
     a = numpy.fromfile(ffd, dtype=dt, count=int(n2 - n1))  # primary array
-    b = []  # flat array
+    b = []  # list in list todo make the numpy array
     for row in a:  # convert array format to simple table
         rowlist = [row[0]]
         for value in row[1]:
             rowlist.append(value)
         b.append(rowlist)
+    ffd.close()  # end of ffd reading
 
-    df = pd.DataFrame(b, columns=colheaders)
-    print(df)
+    # 3. and now we're going to convert our list to dataframe
+    if jtc:
+        timecode = [i[0] for i in b]  # we can use julian timecode
+    else:
+        timecode = [julian.from_jd(i[0], 'mjd').strftime('%Y-%m-%d %H:%M:%S') for i in b]
+    data = [i[1:] for i in b]
+    df = pd.DataFrame(data, index=timecode, columns=colheaders[1:])  # todo missing to None
+    df.index.name = 'timecode' if jtc else 'date and time'
 
-    # making .csv
+    # 4. finally we make .csv (great again)
     outfile = open(filename + 'csv', 'w')
     df.to_csv(outfile, sep=';')
     outfile.close()
+
 
 # executing part of file
 for file in openlist:
