@@ -48,7 +48,7 @@ def binff2csv(filename, jtc=False):  # converting function
         elif 'ROWS' in strin:
             Nrows = int(value)
         elif 'MISSING' in strin:
-            Missvs = float(value)  # todo check out header file for other parameters
+            Missvs = numpy.float64(value)  # todo check out header file for other parameters
     ffh.readline()
     # then we read the rest of the header file
     colheaders = []  # headers of our csv-table
@@ -89,8 +89,9 @@ def binff2csv(filename, jtc=False):  # converting function
     data = [i[1:] for i in b]
     df = pd.DataFrame(data, index=timecode, columns=colheaders[1:])  # todo missing to None
     df.index.name = 'timecode' if jtc else 'date and time'
+    df = df.replace({Missvs: None, -1.0000000331813535e+32: None})  # it's time to remove missing values
 
-    # 4. finally we make .csv (great again)
+    # 4. finally we make *.csv
     outfile = open(filename + 'csv', 'w')
     df.to_csv(outfile, sep=';')
     outfile.close()
