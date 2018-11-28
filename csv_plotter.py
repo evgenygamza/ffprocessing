@@ -7,16 +7,20 @@ import matplotlib.pyplot as plt
 
 Tk().withdraw()
 
-# importing part of file
-openlist = askopenfilenames(  # fixme не работает путь с кириллицей
-    title="Выберите *.csv файл",
-    filetypes=(("csv files", "*.csv"),
-               ("all files", "*.*")))
+# # importing part of file
+# openlist = askopenfilenames(
+#     title="Выберите *.csv файл",
+#     filetypes=(("csv files", "*.csv"),
+#                ("all files", "*.*")))
 
-# openlist = ['C:/Users/Evgeny/PycharmProjects/ffprocessing/test.csv']  # testing version of openlist
+openlist = ['C:/Users/Evgeny/PycharmProjects/ffprocessing/test.csv']  # testing version of openlist
 
-# # for cyrillic tests:
-# openlist = ['C:/Users/Evgeny/YandexDisk/!ИЗМИРАН/Сентябрьские магнитограммы/SPB_20180900_60pp.csv']
+# for cyrillic tests:
+openlist = ['C:/Users/Evgeny/YandexDisk/!ИЗМИРАН/Сентябрьские магнитограммы/SPB_20180900_60pp.csv']
+
+# # for multiple tests:
+# openlist = ['C:/Users/Evgeny/YandexDisk/!ИЗМИРАН/Сентябрьские магнитограммы/SPB_20180900_60pp.csv',
+#             'C:/Users/Evgeny/YandexDisk/!ИЗМИРАН/Сентябрьские магнитограммы/SPB_20180900_60pp.csv']
 
 
 # main part of file
@@ -28,12 +32,12 @@ def csv_plot(filename):  # reading and plotting function
     # todo make a filter for invalid values (10 sigma for example)
     print(df)
     print(df.info())
-    df.plot()
-    plt.show()
+    df.plot(subplots=True, figsize=(10, 5))
 
 
 # executive part
 for file in openlist:
     csv_plot(file)
+plt.show()
 
 print('Done')  # fixme why running does not stop?

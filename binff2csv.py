@@ -87,7 +87,7 @@ def binff2csv(filename, jtc=False):  # converting function
     else:
         timecode = [julian.from_jd(i[0], 'mjd').strftime('%Y-%m-%d %H:%M:%S') for i in b]
     data = [i[1:] for i in b]
-    df = pd.DataFrame(data, index=timecode, columns=colheaders[1:])  # todo missing to None
+    df = pd.DataFrame(data, index=timecode, columns=colheaders[1:])
     df.index.name = 'timecode' if jtc else 'date and time'
     df = df.replace({Missvs: None, -1.0000000331813535e+32: None})  # it's time to remove missing values
 
