@@ -5,22 +5,28 @@ from tkinter import Tk
 from tkinter.filedialog import askopenfilenames
 import matplotlib.pyplot as plt
 
-Tk().withdraw()
+root = Tk()  # Tkinter window
+root.withdraw()  # We make it invisible
 
-# # importing part of file
-# openlist = askopenfilenames(
-#     title="Выберите *.csv файл",
-#     filetypes=(("csv files", "*.csv"),
-#                ("all files", "*.*")))
+# importing part of file
+openlist = askopenfilenames(
+    title="Выберите *.csv файл",
+    filetypes=(("csv files", "*.csv"),
+               ("all files", "*.*")))
 
-openlist = ['C:/Users/Evgeny/PycharmProjects/ffprocessing/test.csv']  # testing version of openlist
+# # some openlists for testing:
+# # short single file:
+# openlist = ['C:/Users/Evgeny/PycharmProjects/ffprocessing/test.csv']
 
-# for cyrillic tests:
-openlist = ['C:/Users/Evgeny/YandexDisk/!ИЗМИРАН/Сентябрьские магнитограммы/SPB_20180900_60pp.csv']
+# # file with cyrillic path:
+# openlist = ['C:/Users/Evgeny/YandexDisk/!ИЗМИРАН/Сентябрьские магнитограммы/SPB_20180900_60pp.csv']
 
-# # for multiple tests:
+# # list of three files:
 # openlist = ['C:/Users/Evgeny/YandexDisk/!ИЗМИРАН/Сентябрьские магнитограммы/SPB_20180900_60pp.csv',
-#             'C:/Users/Evgeny/YandexDisk/!ИЗМИРАН/Сентябрьские магнитограммы/SPB_20180900_60pp.csv']
+#             'C:/Users/Evgeny/YandexDisk/!ИЗМИРАН/Сентябрьские магнитограммы/ALK_20180900_60pp.csv',
+#             'C:/Users/Evgeny/PycharmProjects/ffprocessing/test.csv']
+
+root.destroy()  # closing the invisible window
 
 
 # main part of file
@@ -32,12 +38,17 @@ def csv_plot(filename):  # reading and plotting function
     # todo make a filter for invalid values (10 sigma for example)
     print(df)
     print(df.info())
-    df.plot(subplots=True, figsize=(10, 5))
+    # df.plot(subplots=True, figsize=(10, 5))
+    # # todo попробовать этим
+    df.filter(regex=r'ALK_H').plot(ax=axes[0])
+    df.filter(regex=r'ALK_E').plot(ax=axes[1], sharex=True)
+    df.filter(regex=r'ALK_Z').plot(ax=axes[2], sharex=True)
 
 
 # executive part
+fig, axes = plt.subplots(3, 1, figsize=(10, 5))
 for file in openlist:
     csv_plot(file)
 plt.show()
 
-print('Done')  # fixme why running does not stop?
+print('Done')
