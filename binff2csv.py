@@ -59,8 +59,9 @@ def binff2csv(filename, jtc=False):  # converting function
             break
     ffh.close()  # end of header reading
 
+    print('Now processing:  %s' % filename.split('/')[-1])
     print('file length is: %d counts' % Nrows)
-    print('number of colheaders: %d' % (Ncols + 1))
+    print('number of columns: %d' % (Ncols + 1))
     print('estimated file size: %d' % (recsize * Nrows))
 
     # 2. then we open binary file

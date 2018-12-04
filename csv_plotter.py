@@ -34,22 +34,25 @@ def csv_plot(filename):  # reading and plotting function
     print('Now processing:  %s' % filename.split('/')[-1])
     df = pd.read_csv(filename, sep=';', engine='python', encoding='utf8',
                      index_col='date and time', parse_dates=True)
-    # "engine" and "encoding" parameters was added to solve the problem with cyrillic path to file
-    # todo make a window filter for invalid values (00100)
+    # "engine" and "encoding" parameters were added to solve the problem with cyrillic path to file
+    # todo make a "window" filter for invalid values (00100) (someday)
     print(df.info())
     for col in df.columns:
         df[col] -= df[col].mean()  # subtract average value from column
         # df[col] -= df[col].loc[df[col].first_valid_index()]  # subtract first valid value from column
+    try:
+        df.filter(regex=r'..._[HX]').plot(ax=axes[0])  # add components to relevant subplots
+        df.filter(regex=r'..._[EY]').plot(ax=axes[1])  # using regular expressions as a filter parameter
+        df.filter(regex=r'..._Z').plot(ax=axes[2])
+    except:
+        df.filter(regex=r'A[UEL]').plot(ax=axes[3])
 
-    df.filter(regex=r'..._[HX]').plot(ax=axes[0])  # add components to relevant subplots
-    df.filter(regex=r'..._[EY]').plot(ax=axes[1])  # using regular expressions as a filter parameter
-    df.filter(regex=r'..._Z').plot(ax=axes[2])
 
-
-# executive part
-fig, axes = plt.subplots(3, 1, figsize=(10, 5), sharex=True)
+# executive part todo make a 3 or 4 subplots window
+fig, axes = plt.subplots(4, 1, figsize=(10, 5), sharex=True)
 for file in openlist:
     csv_plot(file)
+plt.style.use('ggplot')
 plt.show()
 
 print('Done')
