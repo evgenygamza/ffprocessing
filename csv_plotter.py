@@ -30,7 +30,7 @@ root.destroy()  # closing the invisible window
 #             'C:/Users/Evgeny/PycharmProjects/ffprocessing/test.csv']
 
 llll = []
-nnnn = ['x', 'y', 'z']
+nnnn = ['AU', 'AE', 'AL']
 
 
 # main part of file
@@ -49,15 +49,21 @@ def csv_plot(filename):  # reading and plotting function
         df.filter(regex=r'..._[EY]').plot(ax=axes[1])  # using regular expressions as a filter parameter
         df.filter(regex=r'..._Z').plot(ax=axes[2])
     except:
-        llll.append(df.filter(regex=r'A[UEL]').plot(ax=axes[0]))  # fixme
-        # df.filter(regex=r'A[UEL]').plot(ax=axes[0])
+        df.filter(regex=r'AU').plot(ax=axes[0]), df.filter(regex=r'AE').plot(ax=axes[0]), df.filter(regex=r'AL').plot(ax=axes[0])
+        df.filter(regex=r'AU').plot(ax=axes[1]), df.filter(regex=r'AE').plot(ax=axes[1]), df.filter(regex=r'AL').plot(ax=axes[1])
+        df.filter(regex=r'AU').plot(ax=axes[2]), df.filter(regex=r'AE').plot(ax=axes[2]), df.filter(regex=r'AL').plot(ax=axes[2])
+        for i in range(len(axes[0].lines)):
+            llll.append([])
+            for j in [0, 1, 2]:
+                llll[i].append(axes[j].lines[i])
 
 
 # executive part todo make a 3 or 4 subplots window
 def func(label):
     for i in range(len(llll)):
         if label == nnnn[i]:
-            llll[i].set_visible(not llll[i].get_visible())
+            for j in [0, 1, 2]:
+                llll[i][j].set_visible(not llll[i][j].get_visible())
     plt.draw()
 
 
