@@ -17,20 +17,9 @@ openlist = askopenfilenames(
 
 root.destroy()  # closing the invisible window
 
-# # some openlists for testing:
-# # short single file:
-# openlist = ['C:/Users/Evgeny/PycharmProjects/ffprocessing/test.csv']
-
-# # file with cyrillic path:
-# openlist = ['C:/Users/Evgeny/YandexDisk/!ИЗМИРАН/Сентябрьские магнитограммы/SPB_20180900_60pp.csv']
-
-# # list of three files:
-# openlist = ['C:/Users/Evgeny/YandexDisk/!ИЗМИРАН/Сентябрьские магнитограммы/SPB_20180900_60pp.csv',
-#             'C:/Users/Evgeny/YandexDisk/!ИЗМИРАН/Сентябрьские магнитограммы/ALK_20180900_60pp.csv',
-#             'C:/Users/Evgeny/PycharmProjects/ffprocessing/test.csv']
 
 llll = []
-nnnn = ['AU', 'AE', 'AL']
+nnnn = ['AE', 'AU', 'AL']  # fixme вот сравнить два этих списка. чекбоксы нужны всем графикам
 
 
 # main part of file
@@ -41,21 +30,22 @@ def csv_plot(filename):  # reading and plotting function
     # "engine" and "encoding" parameters were added to solve the problem with cyrillic path to file
     # todo make a "window" filter for invalid values (00100) (someday)
     print(df.info())
-    for col in df.columns:
-        df[col] -= df[col].mean()  # subtract average value from column
-        # df[col] -= df[col].loc[df[col].first_valid_index()]  # subtract first valid value from column
-    try:
-        df.filter(regex=r'..._[HX]').plot(ax=axes[0])  # add components to relevant subplots
-        df.filter(regex=r'..._[EY]').plot(ax=axes[1])  # using regular expressions as a filter parameter
-        df.filter(regex=r'..._Z').plot(ax=axes[2])
-    except:
-        df.filter(regex=r'AU').plot(ax=axes[0]), df.filter(regex=r'AE').plot(ax=axes[0]), df.filter(regex=r'AL').plot(ax=axes[0])
-        df.filter(regex=r'AU').plot(ax=axes[1]), df.filter(regex=r'AE').plot(ax=axes[1]), df.filter(regex=r'AL').plot(ax=axes[1])
-        df.filter(regex=r'AU').plot(ax=axes[2]), df.filter(regex=r'AE').plot(ax=axes[2]), df.filter(regex=r'AL').plot(ax=axes[2])
+
+    if 'AU' in df:
+        df.filter(regex=r'AE').plot(ax=axes[0]), df.filter(regex=r'AU').plot(ax=axes[0]), df.filter(regex=r'AL').plot(ax=axes[0])
+        df.filter(regex=r'AE').plot(ax=axes[1]), df.filter(regex=r'AU').plot(ax=axes[1]), df.filter(regex=r'AL').plot(ax=axes[1])
+        df.filter(regex=r'AE').plot(ax=axes[2]), df.filter(regex=r'AU').plot(ax=axes[2]), df.filter(regex=r'AL').plot(ax=axes[2])
         for i in range(len(axes[0].lines)):
             llll.append([])
             for j in [0, 1, 2]:
                 llll[i].append(axes[j].lines[i])
+    else:
+        for col in df.columns:
+            df[col] -= df[col].mean()  # subtract average value from column
+            # df[col] -= df[col].loc[df[col].first_valid_index()]  # subtract first valid value from column
+        df.filter(regex=r'..._[HX]').plot(ax=axes[0])  # add components to relevant subplots
+        df.filter(regex=r'..._[EY]').plot(ax=axes[1])  # using regular expressions as a filter parameter
+        df.filter(regex=r'..._Z').plot(ax=axes[2])
 
 
 # executive part todo make a 3 or 4 subplots window
