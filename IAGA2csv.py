@@ -11,7 +11,6 @@ root.withdraw()  # We make it invisible
 # next block takes full-path names of files without extension to openlist
 openlist = askopenfilenames(title="Âûבונטעו *.csv פאיכ",
                             filetypes=(("txt files", "*.txt"), ("all files", "*.*")))
-
 root.destroy()  # closing the invisible window
 
 
@@ -23,17 +22,15 @@ def IAGA2csv(filename):  # reading and plotting function
         file.readline()
     arr = []
     for string in file:
-        arr.append(string.split())
-    df = pd.DataFrame(arr)
+        x = string.split()
+        x[0:2] = [' '.join(x[0:2])]
+        arr.append(x)
+    ind = [line[0] for line in arr[1:]]
+    df = pd.DataFrame([l[1:] for l in arr[1:]], columns=arr[0][1:-1], index=[line[0] for line in arr[1:]])
 
-
-    # df = pd.read_csv(filename, sep=' ', engine='python', encoding='utf8',
-    #                  parse_dates=True,  # index_col='date and time'
-    #                  skiprows=19)
-    # # "engine" and "encoding" parameters were added to solve the problem with cyrillic path to file
-    # # todo make a "window" filter for invalid values (00100) (someday)
+    # todo read_scv instead readline and 'for' (someday)
     print(df.info())
-    # df.index.name = 'date and time'
+    df.index.name = 'date and time'
 
     # 4. finally we make *.csv
     outfile = open(filename[:-3] + 'csv', 'w')

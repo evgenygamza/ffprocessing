@@ -21,7 +21,7 @@ root.destroy()  # closing the invisible window
 def csv_plot(filename):  # reading and plotting function
     print('Now processing:  %s' % filename.split('/')[-1])
     df = pd.read_csv(filename, sep=';', engine='python', encoding='utf8',
-                     index_col='date and time', parse_dates=True)
+                     index_col=0, parse_dates=True)
     # "engine" and "encoding" parameters were added to solve the problem with cyrillic path to file
     # todo make a "window" filter for invalid values (00100) (someday)
     print(df.info())
