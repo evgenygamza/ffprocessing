@@ -20,12 +20,16 @@ root.destroy()  # closing the invisible window
 # main part of file
 def csv_plot(filename):  # reading and plotting function
     print('Now processing:  %s' % filename.split('/')[-1])
-    df = pd.read_csv(filename, sep=';', engine='python', encoding='utf8',
+    df = pd.read_csv(filename, sep=',', engine='python', encoding='utf8',
                      index_col=0, parse_dates=True)
     # "engine" and "encoding" parameters were added to solve the problem with cyrillic path to file
     # todo make a "window" filter for invalid values (00100) (someday)
+    # for i in range(df.index.size):
+    minuteindex = [i.replace(second=00) for i in df.index]
+    df.index = minuteindex
+    print(df.index[0], df.index[-1])
     print(df.info())
-    if 'AU' in df:
+    if 'AL' in df:
         df.filter(regex=r'AL').plot(ax=axes[0])  # df.filter(regex=r'AU').plot(ax=axes[0]), df.filter(regex=r'AE').plot(ax=axes[0])
         df.filter(regex=r'AL').plot(ax=axes[1])  # df.filter(regex=r'AU').plot(ax=axes[1]), df.filter(regex=r'AE').plot(ax=axes[1])
         df.filter(regex=r'AL').plot(ax=axes[2])  # df.filter(regex=r'AU').plot(ax=axes[2]), df.filter(regex=r'AE').plot(ax=axes[2])
@@ -44,6 +48,9 @@ fig, axes = plt.subplots(3, 1, figsize=(10, 5), sharex=True)
 for file in openlist:
     csv_plot(file)
 plt.style.use('ggplot')
+axes[0].legend(loc='right')
+axes[1].legend(loc='right')
+axes[2].legend(loc='right')
 plt.show()
 
 print('Done')

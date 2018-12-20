@@ -28,17 +28,15 @@ def csv_slice(filename):  # reading and plotting function
     for month in range(12):
         mon_df = df[df.index[0]+monthdelta(month):df.index[0]+monthdelta(month+1)]
         outfile = open('%s-%02d.csv' % (filename, month+1), 'w')
-        mon_df.to_csv(outfile, sep=';')
+        mon_df.to_csv(outfile, sep=',')
         outfile.close()
 
 
-
-
+# todo make some text in program
 
         # print(df.index[0]:)
         # print(df[regex=':])
         # 2007-01-31 23:59:30
-
 
 for file in openlist:
     csv_slice(file)

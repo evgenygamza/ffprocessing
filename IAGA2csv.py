@@ -23,6 +23,7 @@ def IAGA2csv(filename):  # reading and plotting function
     arr = []
     for string in file:
         x = string.split()
+        x[1] = x[1][:-4]
         x[0:2] = [' '.join(x[0:2])]
         arr.append(x)
     ind = [line[0] for line in arr[1:]]
@@ -34,7 +35,7 @@ def IAGA2csv(filename):  # reading and plotting function
 
     # 4. finally we make *.csv
     outfile = open(filename[:-3] + 'csv', 'w')
-    df.to_csv(outfile, sep=';')
+    df.to_csv(outfile, sep=',')
     outfile.close()
 
 

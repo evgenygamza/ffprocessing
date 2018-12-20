@@ -94,7 +94,7 @@ def binff2csv(filename, jtc=False):  # converting function
 
     # 4. finally we make *.csv
     outfile = open(filename + 'csv', 'w')
-    df.to_csv(outfile, sep=';')
+    df.to_csv(outfile, sep=',')
     outfile.close()
 
 
