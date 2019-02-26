@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+{% extends "mainApp/wrapper.html" %}
+
+{% block content %}
+<h2 class="text-info">{{articles.title}}</h2>
+<h6>{{articles.date|date:"d-m-y в H:i"}}</h6>
+<p>{{articles.body|safe|linebreaks}}</p>
+{% endblock %}
